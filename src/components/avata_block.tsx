@@ -1,16 +1,23 @@
 "use client";
 
 import { EntityType } from "@prisma/client";
-import type { getActivities } from "@/app/_components/actions";
 import AvatarEntity from "./avatar_entity";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+
+interface Activity {
+	entityId: string;
+	entity: {
+		type: EntityType;
+		name: string;
+	};
+}
 
 export default function AvatarBlock({
 	activity,
 	size = "g",
 }: {
-	activity: Awaited<ReturnType<typeof getActivities>>[number];
+	activity: Activity;
 	size?: "p" | "g";
 }) {
 	const sizeClass = size === "p" ? "h-8 w-8" : "h-15 w-15";

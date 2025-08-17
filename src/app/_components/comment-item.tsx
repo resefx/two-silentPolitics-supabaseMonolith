@@ -37,7 +37,12 @@ export function CommentItem({ comment, postId, handleVote }: CommentItemProps) {
 					/>
 					<AvatarFallback>
 						<AvatarEntity
-							id={comment.entity?.name || comment.userId || comment.id}
+							id={
+								comment.entity?.name ||
+								comment.commentator ||
+								comment.userId ||
+								comment.id
+							}
 						/>
 					</AvatarFallback>
 				</Avatar>
