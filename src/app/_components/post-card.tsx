@@ -2,6 +2,7 @@ import { PostScope, type Prisma } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatTimeAgo } from "@/lib/formattimeago";
 import { getPostDescription } from "@/lib/getpostdescription";
+import { CommentSection } from "./comment-section";
 import { FloatingMentions } from "./floating-mentions";
 
 type PostWithPostEntity = Prisma.PostGetPayload<{
@@ -58,11 +59,7 @@ export function PostCard({ post, handleVote }: PostCardProps) {
 				</Card>
 
 				{/* Comentários - com espaço lateral */}
-				{/* <CommentSection
-					comments={post.comments}
-					postId={post.id}
-					handleVote={handleVote}
-				/> */}
+				<CommentSection comments={post.comments} postId={post.id} />
 			</div>
 		</div>
 	);

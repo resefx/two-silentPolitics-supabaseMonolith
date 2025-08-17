@@ -13,7 +13,7 @@ type CommentsWithEntity = Prisma.CommentGetPayload<{
 interface CommentItemProps {
 	comment: CommentsWithEntity;
 	postId: string;
-	handleVote: (
+	handleVote?: (
 		postId: string,
 		type: "like" | "dislike",
 		commentId: string,
@@ -45,7 +45,9 @@ export function CommentItem({ comment, postId, handleVote }: CommentItemProps) {
 				<div className="flex-1">
 					<div className="flex items-center space-x-2 mb-1">
 						<span className="font-medium text-sm">
-							{comment.entity?.name || "Usuário Desconhecido"}
+							{comment.entity?.name ||
+								comment.commentator ||
+								"Usuário Desconhecido"}
 						</span>
 						{comment.ai && (
 							<Badge variant="outline" className="bg-blue-100 text-blue-700">

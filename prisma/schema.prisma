@@ -75,14 +75,15 @@ model PostEntity {
 }
 
 model Comment {
-  id        String   @id @default(cuid())
-  ai        Boolean  @default(false) // Indicador se o comentário foi gerado por IA
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  postId    String
-  userId    String? // Se comentários forem vinculados a usuários
-  entityId  String? // Se vinculados a entidade
+  id          String   @id @default(cuid())
+  ai          Boolean  @default(false) // Indicador se o comentário foi gerado por IA
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  postId      String
+  userId      String? // Se comentários forem vinculados a usuários
+  entityId    String? // Se vinculados a entidade
+  commentator String?
 
   entity   Entity?           @relation(fields: [entityId], references: [id])
   post     Post              @relation(fields: [postId], references: [id])

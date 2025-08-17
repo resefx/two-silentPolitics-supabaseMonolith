@@ -8,7 +8,7 @@ type CommentsWithEntity = Prisma.CommentGetPayload<{
 interface CommentSectionProps {
 	comments: CommentsWithEntity[];
 	postId: string;
-	handleVote: (
+	handleVote?: (
 		postId: string,
 		type: "like" | "dislike",
 		commentId: string,
@@ -32,7 +32,7 @@ export function CommentSection({
 						key={comment.id}
 						comment={comment}
 						postId={postId}
-						handleVote={handleVote}
+						// handleVote={handleVote}
 					/>
 				))}
 			</div>
