@@ -23,7 +23,7 @@ interface PostCardProps {
 export function PostCard({ post, handleVote }: PostCardProps) {
 	return (
 		<div className="relative">
-			{post.scope !== PostScope.PLATFORM && (
+			{post.scope !== PostScope.PLATFORM && post.PostEntity.length > 0 && (
 				<FloatingMentions postEntities={post.PostEntity} />
 			)}
 
@@ -41,6 +41,8 @@ export function PostCard({ post, handleVote }: PostCardProps) {
 								{formatTimeAgo(post.createdAt)}
 							</p>
 						</div>
+
+						<h2 className=" font-bold p-3">{post.title}</h2>
 
 						{/* Conteúdo do Post */}
 						<p className="text-gray-900 mb-4">{post.content}</p>

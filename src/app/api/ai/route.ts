@@ -57,7 +57,11 @@ Rules:
 - The "title" and "content" must be in Portuguese.
 - Research similar topics or parties that may be impacted and add them to the content.
 - If appropriate, at the end of the content you can add some questions about the news presented to question people from different political spectrums, these comments may exceed the defined limit of the "content".
-- For "spectrum", classify the news using the provided enum categories only. If unclear, return "neutral".`,
+- For "spectrum", classify the news using the provided enum categories only. If unclear, return "neutral".
+- Do NOT mention or allude to:
+   • temporal organizations or governments (e.g., "governo Trump", "governo Bolsonaro", "gestão X", "administração Y");
+   • abstract or ideological entities such as "censura", "liberdade de expressão", "internet livre".
+- Every generated post must explicitly mention at least one concrete entity (e.g., company, institution, court, party, group, or organization) directly involved in the event. Do not leave the content entity-less.`,
     ],
     ["human", "{text}"],
 ]);
@@ -78,6 +82,10 @@ export async function GET() {
         }
     })
 
+    if (!lastNews) {
+        return new Response("No new news found", { status: 404 });
+    }
+
     const llm = new ChatGoogleGenerativeAI({
         model: "gemini-2.0-flash",
         temperature: 0.2, // ligeiramente mais criativo p/ garantir completude
@@ -96,9 +104,14 @@ export async function GET() {
         return new Response("Failed to generate response", { status: 500 });
     }
 
+    if (response.entities.length === 0) {
+        return new Response("No entities found in the response", { status: 500 });
+    }
+
     const post = await prismaClient.post.create({
         data: {
-            content: `### ${response.title}. ### \n ${response.content}`,
+            title: response.title,
+            content: response.content,
             spectrum: response.spectrum,
             link: lastNews?.url || "unknown",
             newspaperId: lastNews?.id || null,

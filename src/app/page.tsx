@@ -30,8 +30,8 @@ export default function HomePage() {
 	}, []);
 
 	return (
-		<div className="min-h-screen bg-gray-50 flex">
-			<div className="flex-1 max-w-2xl mx-auto">
+		<div className="w-screen h-screen overflow-hidden flex flex-row">
+			<div className="overflow-auto p-10 w-full">
 				<div className="p-4 space-y-8">
 					<div className="text-center py-4">
 						<h1 className="text-2xl font-bold text-gray-900">Feed Social</h1>

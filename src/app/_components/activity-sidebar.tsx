@@ -1,9 +1,7 @@
 "use client";
 
-import { EntityType } from "@prisma/client";
 import type { ClassAttributes, HTMLAttributes, JSX } from "react";
-import AvatarEntity from "@/components/avatar_entity";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import AvatarBlock from "@/components/avata_block";
 import type { getActivities } from "./actions";
 
 export default function ActivitySidebar(
@@ -15,7 +13,7 @@ export default function ActivitySidebar(
 ) {
 	return (
 		<div {...props}>
-			<div className="space-y-4 py-2 flex justify-center">
+			<div className="flex w-full h-full justify-center py-3">
 				<div className="space-y-3">
 					{props.activities?.map((activity) => (
 						<div
@@ -23,21 +21,7 @@ export default function ActivitySidebar(
 							className="flex items-center space-x-3"
 						>
 							<div className="relative">
-								<Avatar
-									className={
-										activity.entity.type === EntityType.PERSON
-											? "h-15 w-15"
-											: "h-15 w-15 rounded-lg overflow-hidden bg-gray-200"
-									}
-								>
-									<AvatarImage
-										src={`/api/avatar/entity/${activity.entityId}`}
-										alt={activity.entity.name}
-									/>
-									<AvatarFallback>
-										<AvatarEntity id={activity.entity.name} />
-									</AvatarFallback>
-								</Avatar>
+								<AvatarBlock activity={activity} size={"g"} />
 							</div>
 						</div>
 					))}
