@@ -2,24 +2,21 @@
 import { z } from "zod";
 import prismaClient from "@/lib/prisma";
 
-
-export const ArticleSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    author: z.string(),
-    url: z.string(),
-    urlToImage: z.string(),
-    publishedAt: z.union([z.string(), z.number(), z.date()]),
-    content: z.string(),
-    source: z.object({
-        id: z.string().nullable().optional(),
-        name: z.string(),
-    }),
-});
-
-export type Article = z.infer<typeof ArticleSchema>;
-
 export async function GET() {
+    const ArticleSchema = z.object({
+        title: z.string(),
+        description: z.string(),
+        author: z.string(),
+        url: z.string(),
+        urlToImage: z.string(),
+        publishedAt: z.union([z.string(), z.number(), z.date()]),
+        content: z.string(),
+        source: z.object({
+            id: z.string().nullable().optional(),
+            name: z.string(),
+        }),
+    });
+    type Article = z.infer<typeof ArticleSchema>;
     //Check last 7 days of news articles
     const lastNews = await prismaClient.newspaper.findFirst({
         orderBy: { publishedAt: "desc" },
