@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Tipos de entidades possíveis
+enum EntityType {
+  PERSON
+  ORGANIZATION
+}
+
+// Sentimento para conexões e interações
+enum Sentiment {
+  NEUTRAL
+  POSITIVE
+  NEGATIVE
+}
+
+model Entity {
+  id        String     @id @default(cuid())
+  name      String
+  type      EntityType
+  createdAt DateTime   @default(now())
+
+  // Comentários e atividades vinculadas a esta entidade
+  comments   Comment[]
+  PostEntity PostEntity[]
+}
+
+enum PostScope {
+  SINGLE_ENTITY
+  MULTI_ENTITY
+  PLATFORM
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  scope       PostScope
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  link        String? // URL externa ou referência
+  spectrum    String
+  newspaperId String?
+  active      Boolean   @default(true)
+
+  comments   Comment[]
+  PostEntity PostEntity[]
+  Newspaper  Newspaper?   @relation(fields: [newspaperId], references: [id])
+}
+
+model PostEntity {
+  id        String    @id @default(cuid())
+  entityId  String
+  postId    String
+  sentiment Sentiment
+  createdAt DateTime  @default(now())
+
+  entity Entity @relation(fields: [entityId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([entityId, postId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  ai        Boolean  @default(false) // Indicador se o comentário foi gerado por IA
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  postId    String
+  userId    String? // Se comentários forem vinculados a usuários
+  entityId  String? // Se vinculados a entidade
+
+  entity   Entity?           @relation(fields: [entityId], references: [id])
+  post     Post              @relation(fields: [postId], references: [id])
+  reaction CommentReaction[]
+}
+
+enum ReactionType {
+  LIKE
+  DISLIKE
+  LOVE
+  HAHA
+  SAD
+  ANGRY
+}
+
+model CommentReaction {
+  id        String       @id @default(cuid())
+  commentId String
+  userId    String? // Se comentários forem vinculados a usuários
+  entityId  String? // Se vinculados a entidade
+  createdAt DateTime     @default(now())
+  reaction  ReactionType
+
+  comment Comment @relation(fields: [commentId], references: [id])
+
+  @@unique([commentId, userId])
+}
+
+model Newspaper {
+  id          String   @id @default(cuid())
+  source      Json
+  author      String
+  title       String
+  description String
+  url         String
+  urlToImage  String
+  publishedAt DateTime
+  content     String
+
+  createdAt DateTime @default(now())
+
+  post Post[]
+
+  @@unique([author, title, publishedAt])
+}
