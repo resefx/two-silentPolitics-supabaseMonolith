@@ -2,7 +2,7 @@
 
 import { FileText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import { getActivities, getPosts } from "./_components/actions";
 import ActivitySidebar from "./_components/activity-sidebar";
 import { PostCard } from "./_components/post-card";
@@ -56,7 +56,8 @@ function useActivities() {
 	return { activities, loading };
 }
 
-export default function HomePage() {
+// Componente principal que usa useSearchParams
+function HomePageContent() {
 	const searchParams = useSearchParams();
 	const entity = searchParams.get("entity");
 
@@ -169,18 +170,45 @@ export default function HomePage() {
 		</div>
 	);
 }
-												
-												
-											
-											
-											
-											
-											
-										
-												
-												
-												
-												
-											
-											
-											
+
+// Componente de fallback para o Suspense
+function HomePageFallback() {
+	return (
+		<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
+			<div className="text-center">
+				<div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+					<span className="text-white font-bold text-xl">S</span>
+				</div>
+				<h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+					Social Feed
+				</h1>
+				<p className="text-slate-600 dark:text-slate-400">
+					Carregando...
+				</p>
+			</div>
+		</div>
+	);
+}
+
+// Componente principal com Suspense
+export default function HomePage() {
+	return (
+		<Suspense fallback={<HomePageFallback />}>
+			<HomePageContent />
+		</Suspense>
+	);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
