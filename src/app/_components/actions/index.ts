@@ -2,7 +2,7 @@
 
 import prismaClient from "@/lib/prisma";
 
-export async function getPosts({ page = 1, limit = 10 }: { page?: number; limit?: number }) {
+export async function getPosts({ page = 1, limit = 10, entityId }: { page?: number; limit?: number; entityId?: string }) {
     return await prismaClient.post.findMany({
         include: {
             comments: {
@@ -15,6 +15,13 @@ export async function getPosts({ page = 1, limit = 10 }: { page?: number; limit?
                 },
             },
         },
+        where: entityId ? {
+            PostEntity: {
+                some: {
+                    entityId
+                }
+            }
+        } : {},
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
