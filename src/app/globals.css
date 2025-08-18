@@ -120,3 +120,54 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .animate-in {
+    animation-fill-mode: both;
+  }
+  
+  .slide-in-from-bottom-4 {
+    animation: slide-in-from-bottom-4 0.5s ease-out;
+  }
+  
+  .slide-in-from-left-4 {
+    animation: slide-in-from-left-4 0.3s ease-out;
+  }
+  
+  .slide-in-from-top-4 {
+    animation: slide-in-from-top-4 0.5s ease-out;
+  }
+  
+  @keyframes slide-in-from-bottom-4 {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slide-in-from-left-4 {
+    from {
+      opacity: 0;
+      transform: translateX(-1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slide-in-from-top-4 {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

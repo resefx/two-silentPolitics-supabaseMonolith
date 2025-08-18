@@ -22,13 +22,13 @@ interface CommentItemProps {
 
 export function CommentItem({ comment, postId, handleVote }: CommentItemProps) {
 	return (
-		<div className="bg-gray-50 rounded-lg p-4">
+		<div className="group bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/50 dark:to-slate-700/50 rounded-xl p-4 border border-slate-200/50 dark:border-slate-600/50 hover:shadow-sm transition-all duration-200 hover:scale-[1.02]">
 			<div className="flex items-start space-x-3">
 				<Avatar
 					className={
 						comment.entity?.type === EntityType.PERSON
-							? "h-10 w-10"
-							: "h-10 w-10 rounded-lg overflow-hidden bg-gray-200"
+							? "h-10 w-10 ring-2 ring-slate-200 dark:ring-slate-600"
+							: "h-10 w-10 rounded-lg overflow-hidden bg-slate-200 dark:bg-slate-600 ring-2 ring-slate-200 dark:ring-slate-600"
 					}
 				>
 					<AvatarImage
@@ -47,23 +47,30 @@ export function CommentItem({ comment, postId, handleVote }: CommentItemProps) {
 					</AvatarFallback>
 				</Avatar>
 
-				<div className="flex-1">
-					<div className="flex items-center space-x-2 mb-1">
-						<span className="font-medium text-sm">
+				<div className="flex-1 min-w-0">
+					<div className="flex items-center space-x-2 mb-2">
+						<span className="font-semibold text-sm text-slate-900 dark:text-white truncate">
 							{comment.entity?.name ||
 								comment.commentator ||
 								"Usuário Desconhecido"}
 						</span>
 						{comment.ai && (
-							<Badge variant="outline" className="bg-blue-100 text-blue-700">
+							<Badge variant="outline" className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700 text-xs px-2 py-0.5">
 								IA
 							</Badge>
 						)}
-						<span className="text-xs text-gray-500">
+						<span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-200/50 dark:bg-slate-600/50 px-2 py-0.5 rounded-full">
 							{formatTimeAgo(comment.createdAt)}
 						</span>
 					</div>
-					<p className="text-sm text-gray-700 mb-2">{comment.content}</p>
+
+					<div className="prose prose-slate dark:prose-invert max-w-none">
+						<p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-3">
+							{comment.content}
+						</p>
+					</div>
+
+					{/* Ações do comentário (comentadas por enquanto) */}
 					{/* <div className="flex items-center space-x-2">
 						<Button
 							variant="ghost"
