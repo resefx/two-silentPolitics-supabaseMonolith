@@ -1,25 +1,35 @@
 "use client";
 
+import clsx from "clsx";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import type { ClassAttributes, HTMLAttributes, JSX } from "react";
+import type { HTMLAttributes } from "react";
 import AvatarBlock from "@/components/avata_block";
 import type { getActivities } from "./actions";
 
-export default function ActivitySidebar(
-	props: JSX.IntrinsicAttributes &
-		ClassAttributes<HTMLDivElement> &
-		HTMLAttributes<HTMLDivElement> & {
-			activities: Awaited<ReturnType<typeof getActivities>>;
-		},
-) {
+type ActivitySidebarProps = HTMLAttributes<HTMLDivElement> & {
+	activities: Awaited<ReturnType<typeof getActivities>>;
+};
+
+export default function ActivitySidebar({
+	activities,
+	className,
+	...rest
+}: ActivitySidebarProps) {
 	const searchParams = useSearchParams();
 	const entity = searchParams.get("entity");
 
 	return (
-		<div {...props}>
-			{entity && (
+		<nav
+			{...rest}
+			className={clsx(
+				"flex items-center gap-3 overflow-auto h-auto flex-wrap",
+				className,
+			)}
+		>
+			{/* Botão de voltar quando há entity selecionada */}
+			{entity ? (
 				<div className="flex justify-center items-center mb-4 lg:mb-6">
 					<Link
 						href="/"
@@ -28,21 +38,18 @@ export default function ActivitySidebar(
 						<ArrowLeft className="w-6 h-6 text-gray-900 dark:text-gray-100" />
 					</Link>
 				</div>
-			)}
-
-			{!entity &&
-				props.activities?.map((activity) => (
+			) : (
+				/* Lista de atividades */
+				activities?.map((activity) => (
 					<Link
 						key={activity.id}
 						href={{ pathname: "/", query: { entity: activity.entityId } }}
+						className="flex justify-center items-center"
 					>
-						<div className="flex justify-center items-center">
-							<div className="relative">
-								<AvatarBlock activity={activity} size="g" />
-							</div>
-						</div>
+						<AvatarBlock activity={activity} size="g" />
 					</Link>
-				))}
-		</div>
+				))
+			)}
+		</nav>
 	);
 }
